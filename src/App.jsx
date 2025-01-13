@@ -1,7 +1,4 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { Button, DatePicker, Space, version } from "antd";
 
 function App() {
   return (
