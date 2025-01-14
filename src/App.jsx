@@ -1,10 +1,14 @@
+import { Provider } from "react-redux";
 import "./App.css";
+import { store } from "./redux/store";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <h3>Stay tuned for NutriX-Connect</h3>
+      <Provider store={store}>
+        <AppRoutes />
+      </Provider>
     </>
   );
 }
