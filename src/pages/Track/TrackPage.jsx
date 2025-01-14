@@ -1,7 +1,7 @@
 import ComingSoon from "../../components/ComingSoon";
 import HeaderComponent from "../../components/Header";
 
-const HomePage = () => {
+const TrackPage = () => {
   return (
     <>
       <HeaderComponent />
@@ -10,4 +10,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default TrackPage;
