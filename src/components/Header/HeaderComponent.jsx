@@ -7,7 +7,10 @@ const HeaderComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const user = JSON.parse(useSelector((state) => state.auth.user));
+  const user =
+    typeof useSelector((state) => state.auth.user) == "string"
+      ? JSON.parse(useSelector((state) => state.auth.user))
+      : useSelector((state) => state.auth.user);
 
   const menuItems = [
     { title: "Home", path: "/home" },
