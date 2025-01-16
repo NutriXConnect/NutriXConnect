@@ -4,9 +4,10 @@ const initialState = {
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : null,
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem("user"),
   error: null,
   loading: false,
+  forgotEmailVerified: false,
 };
 
 const AuthSlice = createSlice({
@@ -45,6 +46,43 @@ const AuthSlice = createSlice({
       state.user = null;
       state.error = null;
     },
+    forgotPasswordStart: (state) => {
+      state.forgotEmailVerified = false;
+      state.loading = true;
+      state.error = null;
+    },
+    forgotPasswordSuccess: (state, action) => {
+      state.user = action.payload;
+      state.forgotEmailVerified = true;
+      state.loading = false;
+      state.error = null;
+    },
+    forgotPasswordFailure: (state, action) => {
+      state.forgotEmailVerified = false;
+      state.loading = false;
+      state.error = action.payload;
+    },
+    resetPasswordStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    resetPasswordSuccess: (state, action) => {
+      state.forgotEmailVerified = false;
+      state.user = null;
+      state.loading = false;
+      state.error = null;
+    },
+    resetPasswordFailure: (state, action) => {
+      state.forgotEmailVerified = false;
+      state.loading = false;
+      state.error = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
 });
 
@@ -56,6 +94,14 @@ export const {
   signupSuccess,
   signupFailure,
   logout,
+  forgotPasswordStart,
+  forgotPasswordSuccess,
+  forgotPasswordFailure,
+  resetPasswordStart,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+  setError,
+  clearError,
 } = AuthSlice.actions;
 
 export default AuthSlice.reducer;

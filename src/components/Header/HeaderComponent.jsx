@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { signout } from "../../middleware/userMiddleWare";
 
 const HeaderComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const user =
     typeof useSelector((state) => state.auth.user) == "string"
@@ -80,8 +82,8 @@ const HeaderComponent = () => {
           </div>
 
           {/* User Profile - Desktop */}
-          <Link to="/profile" className="hidden md:flex items-center space-x-4">
-            <div>
+          <div className="hidden md:flex items-center space-x-4">
+            <Link to="/profile">
               <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">
@@ -101,8 +103,14 @@ const HeaderComponent = () => {
                   )}
                 </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+            <button
+              className="p-2 rounded-3xl bg-red-400"
+              onClick={() => dispatch(signout())}
+            >
+              <LogOut className="text-white" />
+            </button>
+          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
@@ -169,6 +177,12 @@ const HeaderComponent = () => {
                 {item.title}
               </Link>
             ))}
+            <button
+              className="flex gap-2 p-2 rounded-lg bg-red-400 text-white"
+              onClick={() => dispatch(signout())}
+            >
+              <LogOut className="ml-2" /> Logout
+            </button>
           </div>
         </div>
       </div>
