@@ -7,6 +7,7 @@ import DashboardPage from "../pages/Dashboard/DashboardPage";
 import ExplorePage from "../pages/Explore/ExplorePage";
 import TrackPage from "../pages/Track/TrackPage";
 import ProfilePage from "../pages/Profile";
+import ForgotPasswordPage from "../pages/ForgetPassword/ForgetPasswordPage";
 
 const AppRoutes = () => {
   return (
@@ -33,8 +34,8 @@ const AppRoutes = () => {
           <Route
             path="/profile"
             element={<PrivateRoute element={<ProfilePage />} />}
-            // element={<ProfilePage />}
           />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </Router>
     </>

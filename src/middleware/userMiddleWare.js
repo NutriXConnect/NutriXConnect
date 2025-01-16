@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 
 import {
   loginStart,
@@ -9,6 +8,14 @@ import {
   signupSuccess,
   signupFailure,
   logout,
+  forgotPasswordSuccess,
+  forgotPasswordStart,
+  forgotPasswordFailure,
+  resetPasswordStart,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+  setError,
+  clearError,
 } from "../redux/slices/AuthSlice";
 
 const USER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api`;
@@ -17,7 +24,7 @@ export const login = (email, password) => async (dispatch) => {
   dispatch(loginStart());
   try {
     const response = await axios.post(
-      `${USER_DETAILS_API}/user/login`,
+      `${USER_DETAILS_API}/auth/login`,
       { email, password },
       { withCredentials: true }
     );
@@ -43,6 +50,57 @@ export const signup = (request) => async (dispatch) => {
 };
 
 export const signout = () => async (dispatch) => {
-  Cookies.remove("token");
-  dispatch(logout());
+  try {
+    const response = await axios.get(`${USER_DETAILS_API}/auth/logout`);
+    localStorage.removeItem("user");
+    dispatch(logout());
+  } catch (error) {
+    dispatch(setError(error));
+  }
+};
+
+export const forgotPassword = (email) => async (dispatch) => {
+  dispatch(forgotPasswordStart());
+  try {
+    const response = await axios.patch(
+      `${USER_DETAILS_API}/auth/forgot-password`,
+      {
+        email,
+      }
+    );
+    if (response.status == 200) {
+      const data = response.data;
+      dispatch(forgotPasswordSuccess(data.userId));
+    }
+  } catch (error) {
+    if (error.status == 404) {
+      dispatch(
+        forgotPasswordFailure("Email address not found. Please Signup.")
+      );
+    } else {
+      dispatch(
+        forgotPasswordFailure("Failed to validate Email address. Try again.")
+      );
+    }
+  }
+};
+
+export const resetPassword = (otp, userId, newPassword) => async (dispatch) => {
+  dispatch(resetPasswordStart());
+  try {
+    const response = await axios.patch(
+      `${USER_DETAILS_API}/auth/reset-password/${userId}`,
+      {
+        otp: otp,
+        password: newPassword,
+      }
+    );
+    dispatch(resetPasswordSuccess("Password reset successful."));
+  } catch (error) {
+    if (error.status == 404) {
+      dispatch(resetPasswordFailure("User not found."));
+    } else {
+      dispatch(resetPasswordFailure("Failed to reset password. Try again."));
+    }
+  }
 };

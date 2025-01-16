@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, signup } from "../../middleware/userMiddleWare";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginSuccess } from "../../redux/slices/AuthSlice";
 
 const LandingPage = () => {
@@ -63,8 +63,6 @@ const LandingPage = () => {
           navigate("/home"); // Navigate after successful login
         })
         .catch((err) => {
-          console.log(err);
-
           setErrors({ general: "Invalid credentials, please try again." });
         });
     } else {
@@ -251,9 +249,12 @@ const LandingPage = () => {
                   </label>
                 </div>
                 {isLogin && (
-                  <a href="#" className="text-sm text-blue-600 hover:underline">
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm text-blue-600 hover:underline"
+                  >
                     Forgot password?
-                  </a>
+                  </Link>
                 )}
               </div>
 
