@@ -1,7 +1,7 @@
 import ComingSoon from "../../components/ComingSoon";
-import HeaderComponent from "../../components/Header";
+import HeaderComponent from "../../components/Common/Header";
 
-const ProfilePage = () => {
+const UserProfilePage = () => {
   return (
     <>
       <HeaderComponent />
@@ -10,4 +10,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default UserProfilePage;

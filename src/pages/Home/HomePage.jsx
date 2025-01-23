@@ -1,11 +1,13 @@
 import ComingSoon from "../../components/ComingSoon";
-import HeaderComponent from "../../components/Header";
+import DietitianListingComponent from "../../components/DietitianListing/DietitianListingComponent";
+import HeaderComponent from "../../components/Common/Header";
 
 const HomePage = () => {
   return (
     <>
       <HeaderComponent />
-      <ComingSoon />
+      <DietitianListingComponent />
+      {/* <ComingSoon /> */}
     </>
   );
 };

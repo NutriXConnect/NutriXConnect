@@ -6,8 +6,9 @@ import HomePage from "../pages/Home";
 import DashboardPage from "../pages/Dashboard/DashboardPage";
 import ExplorePage from "../pages/Explore/ExplorePage";
 import TrackPage from "../pages/Track/TrackPage";
-import ProfilePage from "../pages/Profile";
+import UserProfilePage from "../pages/UserProfile";
 import ForgotPasswordPage from "../pages/ForgetPassword/ForgetPasswordPage";
+import DietitianProfilePage from "../pages/DietitianProfile/DietitianProfilePage";
 
 const AppRoutes = () => {
   return (
@@ -33,9 +34,13 @@ const AppRoutes = () => {
           />
           <Route
             path="/profile"
-            element={<PrivateRoute element={<ProfilePage />} />}
+            element={<PrivateRoute element={<UserProfilePage />} />}
           />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/home/dietitian-profile/:dietitianId"
+            element={<PrivateRoute element={<DietitianProfilePage />} />}
+          />
         </Routes>
       </Router>
     </>
