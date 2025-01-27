@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "../../../redux/slices/PaginationSlice";
 
-const PaginationComponent = ({
-  currentPage = 1,
-  totalPages = 1,
-  onPageChange = () => {},
-}) => {
+const PaginationComponent = ({ totalCount, pageSize, currentPage }) => {
+  const dispatch = useDispatch();
+  const totalPages = Math.ceil(totalCount / pageSize);
+
   const getPageNumbers = () => {
     const delta = 2;
     const range = [];
@@ -41,7 +42,7 @@ const PaginationComponent = ({
     <nav className="flex justify-center items-center space-x-1 md:space-x-2 px-4 py-3">
       {/* Previous Button */}
       <button
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => dispatch(setCurrentPage(currentPage - 1))}
         disabled={currentPage === 1}
         className={`
           px-2 py-2 md:px-4 
@@ -64,7 +65,7 @@ const PaginationComponent = ({
           <button
             key={index}
             onClick={() =>
-              typeof page === "number" ? onPageChange(page) : null
+              typeof page === "number" ? dispatch(setCurrentPage(page)) : null
             }
             className={`
               px-3 py-2
@@ -92,7 +93,7 @@ const PaginationComponent = ({
 
       {/* Next Button */}
       <button
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={() => dispatch(setCurrentPage(currentPage + 1))}
         disabled={currentPage === totalPages}
         className={`
           px-2 py-2 md:px-4
