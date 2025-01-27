@@ -15,25 +15,13 @@ const DietitianSlice = createSlice({
   reducers: {
     setSortBy: (state, action) => {
       state.sortBy = action.payload;
-      // Sort dietitians based on criteria
-      state.dietitians = state.dietitians.sort((a, b) => {
-        switch (action.payload) {
-          case "rating":
-            return b.rating - a.rating;
-          case "price":
-            return a.monthlyPrice - b.monthlyPrice;
-          case "experience":
-            return b.experience - a.experience;
-          default:
-            return 0;
-        }
-      });
     },
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
     },
     setDietitians: (state, action) => {
       state.dietitians = action.payload;
+      state.loading = false;
     },
     setSelectedDietitian: (state, action) => {
       state.selectedDietitian = action.payload;
@@ -44,6 +32,7 @@ const DietitianSlice = createSlice({
     },
     setError: (state, action) => {
       state.error = action.payload;
+      state.loading = false;
     },
   },
 });

@@ -5,20 +5,27 @@ import {
   setLoading,
   setSelectedDietitian,
 } from "../redux/slices/DietitainSlice";
+import { setPagination } from "../redux/slices/PaginationSlice";
 
 const DIETITIAN_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/dietitian`;
 
-export const getListings = () => async (dispatch) => {
+export const getListings = (page, limit, sortBy) => async (dispatch) => {
   dispatch(setLoading());
   try {
     const response = await axios.get(`${DIETITIAN_DETAILS_API}/listings`, {
       withCredentials: true,
+      params: {
+        page,
+        limit,
+        sort: `${sortBy} asc`,
+      },
     });
     const data = response.data;
 
     dispatch(setDietitians(data.data));
+    dispatch(setPagination(data.pagination));
   } catch (e) {
-    dispatch(setError(e));
+    dispatch(setError(e.message));
   }
 };
 
