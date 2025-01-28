@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signout } from "../../../middleware/userMiddleWare";
+import { signout } from "../../../middleware/authMiddleWare";
 
 const HeaderComponent = () => {
   const [isOpen, setIsOpen] = useState(false);

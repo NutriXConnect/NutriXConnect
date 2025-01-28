@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, signup } from "../../middleware/userMiddleWare";
+import { login, signup } from "../../middleware/authMiddleWare";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSuccess } from "../../redux/slices/AuthSlice";
 
@@ -9,15 +9,15 @@ const LandingPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [age, setAge] = useState();
+  const [gender, setGender] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const authError = useSelector((state) => state.auth.error);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
     // Check if user is logged in on initial load
@@ -66,7 +66,7 @@ const LandingPage = () => {
           setErrors({ general: "Invalid credentials, please try again." });
         });
     } else {
-      dispatch(signup({ name, email, password }))
+      dispatch(signup({ name, email, password, age, mobile }))
         .then(() => {
           navigate("/home"); // Navigate after successful signup
         })
@@ -174,6 +174,66 @@ const LandingPage = () => {
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 mt-4">
+                    {/* Age Field */}
+                    <div className="sm:col-span-1">
+                      <label
+                        className="text-sm font-medium text-gray-700"
+                        htmlFor="age"
+                      >
+                        Age
+                      </label>
+                      <input
+                        type="number"
+                        className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
+                        placeholder="Enter your age"
+                        id="age"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                      />
+                    </div>
+
+                    {/* Gender Field */}
+                    <div className="sm:col-span-1">
+                      <label
+                        className="text-sm font-medium text-gray-700"
+                        htmlFor="gender"
+                      >
+                        Gender
+                      </label>
+                      <select
+                        id="gender"
+                        className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      >
+                        <option value="" disabled selected>
+                          Select gender
+                        </option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="others">Others</option>
+                      </select>
+                    </div>
+
+                    {/* Phone Number Field */}
+                    <div className="sm:col-span-2">
+                      <label
+                        className="text-sm font-medium text-gray-700"
+                        htmlFor="mobile"
+                      >
+                        Mobile Number
+                      </label>
+                      <input
+                        type="tel"
+                        className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Enter your phone number"
+                        id="mobile"
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
 

@@ -4,8 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getDietitianProfile } from "../../middleware/dietitianMiddleware";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderComponent from "../../components/Common/Header";
+import LoadingOverlay from "../../components/Common/LoadingOverlay/LoadingOverlay";
 
-const DietitianProfilePage = () => {
+const DietitianPage = () => {
   const { dietitianId } = useParams();
 
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const DietitianProfilePage = () => {
     });
   };
   if (!profile) {
-    return <div>Loading...</div>;
+    return <LoadingOverlay />;
   }
   return (
     <>
@@ -135,4 +136,4 @@ const DietitianProfilePage = () => {
   );
 };
 
-export default DietitianProfilePage;
+export default DietitianPage;
