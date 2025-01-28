@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Mail, Edit, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { forgotPassword, resetPassword } from "../../middleware/userMiddleWare";
+import { forgotPassword, resetPassword } from "../../middleware/authMiddleWare";
 import { useNavigate } from "react-router-dom";
 import { setError } from "../../redux/slices/AuthSlice";
 

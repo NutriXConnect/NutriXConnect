@@ -15,16 +15,15 @@ import {
   resetPasswordSuccess,
   resetPasswordFailure,
   setError,
-  clearError,
 } from "../redux/slices/AuthSlice";
 
-const USER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api`;
+const AUTH_API = `${import.meta.env.VITE_API_URL}/api`;
 
 export const login = (email, password) => async (dispatch) => {
   dispatch(loginStart());
   try {
     const response = await axios.post(
-      `${USER_DETAILS_API}/auth/login`,
+      `${AUTH_API}/auth/login`,
       { email, password },
       { withCredentials: true }
     );
@@ -41,7 +40,7 @@ export const login = (email, password) => async (dispatch) => {
 export const signup = (request) => async (dispatch) => {
   dispatch(signupStart());
   try {
-    const response = await axios.post(`${USER_DETAILS_API}/user`, request);
+    const response = await axios.post(`${AUTH_API}/user`, request);
     const user = response.data;
     dispatch(signupSuccess(user));
   } catch (error) {
@@ -51,7 +50,7 @@ export const signup = (request) => async (dispatch) => {
 
 export const signout = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${USER_DETAILS_API}/auth/logout`);
+    const response = await axios.get(`${AUTH_API}/auth/logout`);
     localStorage.removeItem("user");
     dispatch(logout());
   } catch (error) {
@@ -62,12 +61,9 @@ export const signout = () => async (dispatch) => {
 export const forgotPassword = (email) => async (dispatch) => {
   dispatch(forgotPasswordStart());
   try {
-    const response = await axios.patch(
-      `${USER_DETAILS_API}/auth/forgot-password`,
-      {
-        email,
-      }
-    );
+    const response = await axios.patch(`${AUTH_API}/auth/forgot-password`, {
+      email,
+    });
     if (response.status == 200) {
       const data = response.data;
       dispatch(forgotPasswordSuccess(data.userId));
@@ -89,7 +85,7 @@ export const resetPassword = (otp, userId, newPassword) => async (dispatch) => {
   dispatch(resetPasswordStart());
   try {
     const response = await axios.patch(
-      `${USER_DETAILS_API}/auth/reset-password/${userId}`,
+      `${AUTH_API}/auth/reset-password/${userId}`,
       {
         otp: otp,
         password: newPassword,
