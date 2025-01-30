@@ -1,10 +1,18 @@
 import React, { useEffect } from "react";
-import { StarIcon, Users, Clock, CreditCard, MoveLeft } from "lucide-react";
+import {
+  StarIcon,
+  Users,
+  Clock,
+  CreditCard,
+  MoveLeft,
+  ShoppingCart,
+} from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getDietitianProfile } from "../../middleware/dietitianMiddleware";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderComponent from "../../components/Common/Header";
 import LoadingOverlay from "../../components/Common/LoadingOverlay/LoadingOverlay";
+import { createOrder } from "../../middleware/orderMiddleware";
 
 const DietitianPage = () => {
   const { dietitianId } = useParams();
@@ -12,6 +20,7 @@ const DietitianPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profile = useSelector((state) => state.dietitians.selectedDietitian);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (!profile || dietitianId !== profile._id) {
@@ -28,6 +37,12 @@ const DietitianPage = () => {
       year: "numeric",
       month: "long",
     });
+  };
+
+  const handleBuyPlan = (planId) => {
+    return () => {
+      dispatch(createOrder(planId, profile.userId, user));
+    };
   };
   if (!profile) {
     return <LoadingOverlay />;
@@ -125,6 +140,15 @@ const DietitianPage = () => {
                     <p className="text-xl font-bold text-green-600">
                       ₹{plan.price}
                     </p>
+                  </div>
+                  <div>
+                    <button
+                      onClick={handleBuyPlan(plan._id)}
+                      className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-green-700 transition duration-200"
+                    >
+                      <ShoppingCart size={18} />
+                      Buy Now
+                    </button>
                   </div>
                 </div>
               </div>
