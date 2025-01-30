@@ -7,11 +7,15 @@ export const createOrder =
   (planId, dietitianId, user, status = "pending") =>
   async (dispatch) => {
     try {
-      const response = await axios.post(`${ORDER_DETAILS_API}/${planId}`, {
-        dietitianId,
-        userId: user.email,
-        status,
-      });
+      const response = await axios.post(
+        `${ORDER_DETAILS_API}/${planId}`,
+        {
+          dietitianId,
+          userId: user.email,
+          status,
+        },
+        { withCredentials: true }
+      );
 
       dispatch(razorpayCheckout(response.data), user);
     } catch (error) {
