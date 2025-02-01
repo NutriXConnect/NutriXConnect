@@ -91,7 +91,7 @@ const DietitianListingComponent = () => {
           <PaginationComponent
             currentPage={currentPage}
             pageSize={pageSize}
-            totalCount={totalItems}
+            totalItems={totalItems}
           />
         </div>
       );

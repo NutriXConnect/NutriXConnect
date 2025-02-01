@@ -5,9 +5,14 @@ import {
   getUserProfileSuccess,
   updateUserProfileDetailsSuccess,
   updateUserProfileDetailsFailure,
+  getUserOrdersStart,
+  getUserOrdersSuccess,
+  getUserOrdersFailure,
 } from "../redux/slices/UserSlice";
+import { setPagination } from "../redux/slices/PaginationSlice";
 
 const USER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/user`;
+const ORDER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/order`;
 
 export const getUserProfileDetails = () => async (dispatch) => {
   dispatch(userProfileApiStart());
@@ -53,3 +58,30 @@ export const updateUserProfileDetails = (body) => async (dispatch) => {
     dispatch(updateUserProfileDetailsFailure(err.message));
   }
 };
+
+export const getUserProfileOrders =
+  (page, limit, sortBy = "createdAt") =>
+  async (dispatch) => {
+    dispatch(getUserOrdersStart());
+    try {
+      const response = await axios.get(`${ORDER_DETAILS_API}/profile-orders`, {
+        params: {
+          page,
+          limit,
+          sort: `${sortBy} asc`,
+        },
+        withCredentials: true,
+      });
+
+      dispatch(getUserOrdersSuccess(response.data.data));
+      dispatch(setPagination(response.data.pagination));
+    } catch (e) {
+      if (e.response) {
+        dispatch(getUserOrdersFailure(e.response.data));
+      } else {
+        dispatch(
+          getUserOrdersFailure({ message: e.message, statusCode: e.code })
+        );
+      }
+    }
+  };

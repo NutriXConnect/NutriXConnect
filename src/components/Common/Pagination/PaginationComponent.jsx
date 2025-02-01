@@ -2,9 +2,10 @@ import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../../../redux/slices/PaginationSlice";
 
-const PaginationComponent = ({ totalCount, pageSize, currentPage }) => {
+const PaginationComponent = ({ totalItems, pageSize, currentPage }) => {
   const dispatch = useDispatch();
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const totalPages = Math.ceil(totalItems / pageSize);
+  console.log(totalItems, totalPages);
 
   const getPageNumbers = () => {
     const delta = 2;
