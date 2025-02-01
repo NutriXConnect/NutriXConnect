@@ -34,6 +34,9 @@ const DietitianSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
 });
 
@@ -44,6 +47,7 @@ export const {
   setSelectedDietitian,
   setLoading,
   setError,
+  clearError,
 } = DietitianSlice.actions;
 
 export default DietitianSlice.reducer;

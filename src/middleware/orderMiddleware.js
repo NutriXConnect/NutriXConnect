@@ -1,5 +1,6 @@
 import axios from "axios";
 import { razorpayCheckout } from "./razorpayMiddleware";
+import { paymentProcessFailure } from "../redux/slices/PaymentSlice";
 
 const ORDER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/order`;
 
@@ -19,7 +20,7 @@ export const createOrder =
 
       dispatch(razorpayCheckout(response.data), user);
     } catch (error) {
-      alert("Error: " + error.message);
+      dispatch(paymentProcessFailure(error.message));
       return;
     }
   };

@@ -5,10 +5,12 @@ import { useSelector } from "react-redux";
 import GoalsTab from "../../components/ProfileComponents/Goals/GoalsTab";
 import OrdersTab from "../../components/ProfileComponents/Orders";
 import InformationTab from "../../components/ProfileComponents/Information/InformationTab";
+import FloatingBar from "../../components/Common/FloatingInfoBar/FloatingBar";
 
 // Main Profile Page
 const UserProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
+  const { error } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("information");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -124,6 +126,14 @@ const UserProfilePage = () => {
         {activeTab === "goals" && <GoalsTab />}
         {activeTab === "orders" && <OrdersTab />}
       </div>
+      {error && (
+        <FloatingBar
+          type="error"
+          isVisible={true}
+          message={error?.message}
+          duration={0}
+        />
+      )}
     </>
   );
 };

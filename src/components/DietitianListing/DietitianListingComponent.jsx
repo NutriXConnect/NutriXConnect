@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import DietitianCard from "../DietitianCard/DietitianCard";
-import { setSearchQuery, setSortBy } from "../../redux/slices/DietitainSlice";
+import {
+  clearError,
+  setSearchQuery,
+  setSortBy,
+} from "../../redux/slices/DietitainSlice";
 import PaginationComponent from "../Common/Pagination/PaginationComponent";
 import { getListings } from "../../middleware/dietitianMiddleware";
 import { resetPagination } from "../../redux/slices/PaginationSlice";
 import LoadingOverlay from "../Common/LoadingOverlay";
-import FloatingBar from "../Common/FloatingInfoBar/FloatingBar";
+import { useNavigate } from "react-router-dom";
+import ErrorComponent from "../Common/Error";
+import { signout } from "../../middleware/authMiddleWare";
 
 const DietitianListingComponent = () => {
   const { dietitians, sortBy, loading, error } = useSelector(
@@ -17,6 +23,7 @@ const DietitianListingComponent = () => {
     (state) => state.pagination
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getListings(currentPage, pageSize, sortBy));
@@ -25,6 +32,18 @@ const DietitianListingComponent = () => {
       dispatch(resetPagination());
     };
   }, [currentPage, pageSize, sortBy]);
+
+  useEffect(() => {
+    if (error?.statusCode === 401) {
+      const timer = setTimeout(() => {
+        dispatch(signout());
+        clearError();
+        navigate("/");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, navigate]);
 
   const handleSortChange = (e) => {
     dispatch(setSortBy(e.target.value));
@@ -78,14 +97,11 @@ const DietitianListingComponent = () => {
       );
     } else {
       if (error) {
-        return (
-          <FloatingBar
-            isVisible={true}
-            type="error"
-            message={error}
-            duration={0}
-          />
-        );
+        let message = `${error.statusCode}: ${error.message}.`;
+        if (error.statusCode === 401) {
+          message += " Redirecting to login page";
+        }
+        return <ErrorComponent message={message} />;
       }
     }
   }

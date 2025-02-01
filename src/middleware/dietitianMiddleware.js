@@ -25,7 +25,11 @@ export const getListings = (page, limit, sortBy) => async (dispatch) => {
     dispatch(setDietitians(data.data));
     dispatch(setPagination(data.pagination));
   } catch (e) {
-    dispatch(setError(e.message));
+    if (e.response) {
+      dispatch(setError(e.response.data));
+    } else {
+      dispatch(setError({ message: e.message, statusCode: e.code }));
+    }
   }
 };
 
@@ -39,10 +43,13 @@ export const getDietitianProfile = (dietitianId) => async (dispatch) => {
       }
     );
     const data = response.data;
-    // console.log(response);
 
     dispatch(setSelectedDietitian(data));
   } catch (e) {
-    dispatch(setError(e));
+    if (e.response) {
+      dispatch(setError(e.response.data));
+    } else {
+      dispatch(setError({ message: e.message, statusCode: e.code }));
+    }
   }
 };
