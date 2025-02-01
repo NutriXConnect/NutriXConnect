@@ -17,8 +17,14 @@ export const getUserProfileDetails = () => async (dispatch) => {
     });
 
     dispatch(getUserProfileSuccess(response.data));
-  } catch (err) {
-    dispatch(getUserProfileFailure(err.message));
+  } catch (e) {
+    if (e.response) {
+      dispatch(getUserProfileFailure(e.response.data));
+    } else {
+      dispatch(
+        getUserProfileFailure({ message: e.message, statusCode: e.code })
+      );
+    }
   }
 };
 

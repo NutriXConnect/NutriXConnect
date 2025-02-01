@@ -1,3 +1,9 @@
+import {
+  paymentProcessFailure,
+  paymentProcessStarted,
+  paymentProcessSuccess,
+} from "../redux/slices/PaymentSlice";
+
 const RZP_KEY = `${import.meta.env.VITE_RAZORPAY_KEY_ID}`;
 
 const loadRazorpayScript = () => {
@@ -19,6 +25,7 @@ const loadRazorpayScript = () => {
   });
 };
 export const razorpayCheckout = (order, user) => async (dispatch) => {
+  dispatch(paymentProcessStarted());
   const options = {
     key: RZP_KEY,
     amount: order.amount,
@@ -27,8 +34,11 @@ export const razorpayCheckout = (order, user) => async (dispatch) => {
     description: "Buying the plan",
     order_id: order.id,
     handler: async function (response) {
-      console.log("Payment successful", response);
-      alert("Payment successful");
+      dispatch(
+        paymentProcessSuccess(
+          "Payment Done. Please wait till dietitian contacts you"
+        )
+      );
     },
     theme: {
       color: "#F37254",
@@ -37,13 +47,17 @@ export const razorpayCheckout = (order, user) => async (dispatch) => {
   try {
     const res = await loadRazorpayScript();
     if (!res) {
-      alert("Razorpay loading is failed. Please try again");
+      dispatch(
+        paymentProcessFailure("Razorpay loading is failed. Please try again")
+      );
       return;
     }
     const rzp = new Razorpay(options);
     rzp.open();
   } catch (e) {
+    dispatch(
+      paymentProcessFailure("Failed to initiate Razorpay. Please try again")
+    );
     console.error(e);
-    alert("Failed to initiate Razorpay. Please try again.");
   }
 };
