@@ -5,7 +5,6 @@ import { setCurrentPage } from "../../../redux/slices/PaginationSlice";
 const PaginationComponent = ({ totalItems, pageSize, currentPage }) => {
   const dispatch = useDispatch();
   const totalPages = Math.ceil(totalItems / pageSize);
-  console.log(totalItems, totalPages);
 
   const getPageNumbers = () => {
     const delta = 2;

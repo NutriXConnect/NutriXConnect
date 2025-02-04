@@ -22,10 +22,12 @@ const DietitianSlice = createSlice({
     setDietitians: (state, action) => {
       state.dietitians = action.payload;
       state.loading = false;
+      state.error = null;
     },
     setSelectedDietitian: (state, action) => {
       state.selectedDietitian = action.payload;
       state.loading = false;
+      state.error = null;
     },
     setLoading: (state, action) => {
       state.loading = true;

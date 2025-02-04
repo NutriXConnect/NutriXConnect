@@ -28,6 +28,8 @@ const DietitianPage = () => {
 
   const user = useSelector((state) => state.auth.user);
 
+  const isSubscribed = user.isSubscribed;
+
   useEffect(() => {
     if (!profile || dietitianId !== profile._id) {
       dispatch(getDietitianProfile(dietitianId));
@@ -158,9 +160,10 @@ const DietitianPage = () => {
                       <button
                         onClick={handleBuyPlan(plan._id)}
                         className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-green-700 transition duration-200"
+                        disabled={isSubscribed}
                       >
-                        <ShoppingCart size={18} />
-                        Buy Now
+                        {!isSubscribed && <ShoppingCart size={18} />}
+                        {isSubscribed ? "Already subscribed" : "Buy Now"}
                       </button>
                     </div>
                   </div>

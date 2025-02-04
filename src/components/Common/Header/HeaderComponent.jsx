@@ -17,9 +17,11 @@ const HeaderComponent = () => {
   const menuItems = [
     { title: "Home", path: "/home" },
     { title: "Explore", path: "/explore" },
-    { title: "Dashboard", path: "/dashboard" },
-    { title: "Track", path: "/track" },
   ];
+  if (user.isSubscribed || user.role.includes("dietitian")) {
+    menuItems.push({ title: "Dashboard", path: "/dashboard" });
+    menuItems.push({ title: "Track", path: "/track" });
+  }
 
   const isActive = (path) => {
     if (path === "/" && location.pathname === "/") {
