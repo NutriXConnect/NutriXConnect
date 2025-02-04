@@ -9,6 +9,7 @@ import TrackPage from "../pages/Track/TrackPage";
 import UserProfilePage from "../pages/UserProfile";
 import ForgotPasswordPage from "../pages/ForgetPassword/ForgetPasswordPage";
 import DietitianProfilePage from "../pages/DietitianProfile/DietitianProfilePage";
+import SubscriptionDetailsPage from "../pages/SubscriptionPage/SubscriptionComponent";
 
 const AppRoutes = () => {
   return (
@@ -40,6 +41,10 @@ const AppRoutes = () => {
           <Route
             path="/home/dietitian-profile/:dietitianId"
             element={<PrivateRoute element={<DietitianProfilePage />} />}
+          />
+          <Route
+            path="/dashboard/subscription"
+            element={<PrivateRoute element={<SubscriptionDetailsPage />} />}
           />
         </Routes>
       </Router>

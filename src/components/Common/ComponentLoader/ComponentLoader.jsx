@@ -1,4 +1,4 @@
-const { Loader2 } = require("lucide-react");
+import { Loader2 } from "lucide-react";
 
 const ComponentLoader = ({
   size = "medium",

@@ -66,7 +66,7 @@ const LandingPage = () => {
           setErrors({ general: "Invalid credentials, please try again." });
         });
     } else {
-      dispatch(signup({ name, email, password, age, mobile }))
+      dispatch(signup({ name, email, password, age, mobile, gender }))
         .then(() => {
           navigate("/home"); // Navigate after successful signup
         })
