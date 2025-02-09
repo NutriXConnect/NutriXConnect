@@ -1,11 +1,17 @@
 import axios from "axios";
 import {
+  createDietPlanFailure,
+  createDietPlanSuccess,
   getSubscriptionFailure,
   getSubscriptionsFailure,
   getSubscriptionsSuccess,
   getSubscriptionSuccess,
   subscriptionLoadingStart,
+  updateMealsFailure,
+  updateMealsSuccess,
   updateSubscriptionFailure,
+  updateSubscriptionStatusFailure,
+  updateSubscriptionStatusSuccess,
   updateSubscriptionSuccess,
 } from "../redux/slices/SubscriptionSlice";
 
@@ -35,7 +41,10 @@ export const getSubscriptionPageDetails =
       dispatch(getSubscriptionSuccess(response.data));
     } catch (err) {
       dispatch(
-        getSubscriptionFailure({ statusCode: err.code, message: err.message })
+        getSubscriptionFailure({
+          statusCsubscriptionLoadingStartode: err.code,
+          message: err.message,
+        })
       );
     }
   };
@@ -55,6 +64,71 @@ export const updateSubscriptionDates =
     } catch (err) {
       dispatch(
         updateSubscriptionFailure({
+          statusCode: err.code,
+          message: err.message,
+        })
+      );
+    }
+  };
+subscriptionLoadingStart;
+
+export const createDietPlan = (user, subscription) => async (dispatch) => {
+  dispatch(subscriptionLoadingStart());
+  try {
+    const response = await axios.post(
+      `${SUBSCRIPTION_API_URL}/diet-plan`,
+      { user, subscription },
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch(createDietPlanSuccess(response.data));
+  } catch (err) {
+    dispatch(
+      createDietPlanFailure({
+        statusCode: err.code,
+        message: err.message,
+      })
+    );
+  }
+};
+
+export const updateMeals = (meals, dietPlanId) => async (dispatch) => {
+  dispatch(subscriptionLoadingStart());
+  try {
+    const response = await axios.put(
+      `${SUBSCRIPTION_API_URL}/meals`,
+      { mealPlan: meals, dietPlanId },
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch(updateMealsSuccess(response.data));
+  } catch (err) {
+    dispatch(
+      updateMealsFailure({
+        statusCode: err.code,
+        message: err.message,
+      })
+    );
+  }
+};
+
+export const updateSubscriptionStatus =
+  (subscriptionId, status) => async (dispatch) => {
+    dispatch(subscriptionLoadingStart());
+    try {
+      const response = await axios.patch(
+        `${SUBSCRIPTION_API_URL}/status`,
+        { status, subscriptionId },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(updateSubscriptionStatusSuccess(response.data));
+    } catch (err) {
+      dispatch(
+        updateSubscriptionStatusFailure({
           statusCode: err.code,
           message: err.message,
         })

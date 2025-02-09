@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { X, Plus, Clock, User, Calendar, Edit, BanIcon } from "lucide-react";
+import {
+  X,
+  Plus,
+  Clock,
+  User,
+  Calendar,
+  Edit,
+  BanIcon,
+  ListIcon,
+  PlusCircle,
+} from "lucide-react";
 import HeaderComponent from "../../components/Common/Header";
 import {
+  createDietPlan,
   getSubscriptionPageDetails,
+  updateMeals,
   updateSubscriptionDates,
+  updateSubscriptionStatus,
 } from "../../middleware/subscriptionMiddleware";
 import LoadingOverlay from "../../components/Common/LoadingOverlay";
 import FloatingBar from "../../components/Common/FloatingInfoBar/FloatingBar";
@@ -16,7 +29,13 @@ const SubscriptionDetailsPage = () => {
   const [startDate, setStartDate] = useState("");
   const [editStartDate, setEditStartDate] = useState(false);
   const [mealItems, setMealItems] = useState([]);
+  const [mealForm, setMealForm] = useState({
+    name: "",
+    time: "",
+    meals: [...mealItems],
+  });
 
+  const [mealItemsUpdated, setMealItemsUpdated] = useState(false);
   const dispatch = useDispatch();
   const { selectedSubscription, loading, infoMessage } = useSelector(
     (state) => state.subscription
@@ -46,7 +65,7 @@ const SubscriptionDetailsPage = () => {
       {
         name: "",
         quantity: "",
-        units: "grams",
+        unit: "g",
         calories: "",
         protein: "",
         fiber: "",
@@ -59,6 +78,7 @@ const SubscriptionDetailsPage = () => {
     const updatedItems = [...mealItems];
     updatedItems[index][field] = value;
     setMealItems(updatedItems);
+    setMealItemsUpdated(true);
   };
 
   const handleDeleteItem = (index) => {
@@ -80,6 +100,36 @@ const SubscriptionDetailsPage = () => {
           100
       ) / 100
     ).toFixed(2);
+  };
+
+  const handleCreateDietPlan = (e) => {
+    e.preventDefault();
+    dispatch(
+      createDietPlan(selectedSubscription.user._id, selectedSubscription._id)
+    );
+  };
+
+  const handleMealChanges = (e) => {
+    e.preventDefault();
+    setMealForm((prevForm) => ({
+      ...prevForm,
+      meals: [...mealItems],
+    }));
+    dispatch(
+      updateMeals(
+        { ...mealForm, meals: [...mealItems] },
+        selectedSubscription.dietPlan._id
+      )
+    );
+  };
+
+  const handleSubscriptionUpdateStatus = (e) => {
+    e.preventDefault();
+    return (e) => {
+      dispatch(
+        updateSubscriptionStatus(selectedSubscription._id, e.target.value)
+      );
+    };
   };
 
   if (loading || !selectedSubscription) {
@@ -135,7 +185,7 @@ const SubscriptionDetailsPage = () => {
 
             {/* Subscription Details */}
             <section className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-800">
+              <h3 className="text-lg font-semi.target.valuebold mb-4 flex items-center gap-2 text-gray-800">
                 <Calendar className="h-5 w-5" />
                 Subscription Timeline
               </h3>
@@ -181,7 +231,7 @@ const SubscriptionDetailsPage = () => {
                   <p className="font-medium text-gray-900">{}</p>
                 </div>
                 <div className="bg-white p-4 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-1">Plan Price</p>
+                  <p className="text-sm text-gray-500 mb-1">Status</p>
                   <p className="font-medium text-gray-900">
                     {selectedSubscription.plan.price} INR
                   </p>
@@ -190,163 +240,240 @@ const SubscriptionDetailsPage = () => {
             </section>
 
             {/* Meal Plans */}
-            <section className="bg-gray-50 rounded-lg p-6">
+            <section>
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-800">
-                <Clock className="h-5 w-5" />
-                Meal Plans
+                <ListIcon className="h-5 w-5" />
+                Diet Plan Details
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {selectedSubscription.planDetails?.map((meal, index) => (
-                  <div
-                    key={index}
-                    className="bg-white p-4 rounded-lg transition-all duration-200 hover:shadow-md"
+              {!selectedSubscription?.dietPlan && (
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <p>No Diet plan created yet. Please create a new one.</p>
+                  <button
+                    onClick={handleCreateDietPlan}
+                    className="bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 hover:shadow-md mt-2"
                   >
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="font-semibold text-gray-900">
-                        {meal.mealName}
-                      </h4>
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        Edit
-                      </button>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2 flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {meal.time}
-                    </p>
-                    <ul className="space-y-1">
-                      {meal.mealItems.map((item, idx) => (
-                        <li key={idx} className="text-sm text-gray-700">
-                          • {item.name} - {item.quantity} {item.units}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-                <button
-                  onClick={() => setShowMealForm(!showMealForm)}
-                  className="bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 hover:shadow-md"
-                >
-                  <Plus className="h-5 w-5" />
-                  Add Meal
-                </button>
-              </div>
-            </section>
+                    <Plus className="h-5 w-5" />
+                    Create Plan
+                  </button>
+                </div>
+              )}
 
-            {/* Add Meal Form */}
-            {showMealForm && (
-              <section className="bg-gray-50 rounded-lg p-6 transition-all duration-200">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">
-                  Add New Meal
-                </h3>
-                <form className="space-y-6">
-                  <div className="flex">
-                    <div className="w-1/2 pr-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Meal Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div className="w-1/2 pr-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Time
-                      </label>
-                      <input
-                        type="time"
-                        name="time"
-                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required
-                      />
-                    </div>
+              {selectedSubscription?.dietPlan && (
+                <section className="bg-gray-50 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-800">
+                    <Clock className="h-5 w-5" />
+                    Meal Plans
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {selectedSubscription.dietPlan?.mealPlan.map(
+                      (meal, index) => (
+                        <div
+                          key={index}
+                          className="bg-white p-4 rounded-lg transition-all duration-200 hover:shadow-md"
+                        >
+                          <div className="flex justify-between items-center mb-3">
+                            <h4 className="font-semibold text-gray-900">
+                              {meal.name}
+                            </h4>
+                            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                              Edit
+                            </button>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2 flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            {meal.time}
+                          </p>
+                          <ul className="space-y-1">
+                            {meal.meals.map((item, idx) => (
+                              <li key={idx} className="text-sm text-gray-700">
+                                • {item.name} - {item.quantity} {item.unit}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )
+                    )}
+                    <button
+                      onClick={() => setShowMealForm(!showMealForm)}
+                      className="bg-blue-50 text-blue-600 p-4 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 hover:shadow-md"
+                    >
+                      <Plus className="h-5 w-5" />
+                      Add Meal
+                    </button>
                   </div>
+                </section>
+              )}
 
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-gray-800">Meal Items</h4>
-                    {mealItems.map((item, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-7 gap-4 items-center bg-white p-4 rounded-lg"
-                      >
+              {/* Add Meal Form */}
+              {showMealForm && (
+                <section className="bg-gray-50 rounded-lg p-6 transition-all duration-200">
+                  <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                    Add/Update Meal
+                  </h3>
+                  <form className="space-y-6">
+                    <div className="flex">
+                      <div className="w-1/2 pr-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Meal Name
+                        </label>
                         <input
                           type="text"
-                          placeholder="Item Name"
-                          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          name="name"
+                          value={mealForm.name}
                           onChange={(e) =>
-                            handleItemChange(index, "name", e.target.value)
+                            setMealForm({ ...mealForm, name: e.target.value })
                           }
+                          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          required
                         />
+                      </div>
+                      <div className="w-1/2 pr-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Time
+                        </label>
                         <input
-                          type="number"
-                          placeholder="Quantity"
-                          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          type="time"
+                          name="time"
+                          value={mealForm.time}
                           onChange={(e) =>
-                            handleItemChange(index, "quantity", e.target.value)
+                            setMealForm({ ...mealForm, time: e.target.value })
                           }
+                          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          required
                         />
-                        <select
-                          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          onChange={(e) =>
-                            handleItemChange(index, "units", e.target.value)
-                          }
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-gray-800">Meal Items</h4>
+                      {mealItems.map((item, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-7 gap-4 items-center bg-white p-4 rounded-lg"
                         >
-                          <option value="pieces">pcs</option>
-                          <option value="grams">gms</option>
-                          <option value="ml">ml</option>
-                        </select>
-                        {["calories", "protein", "fats"].map((field) => (
                           <input
-                            key={field}
-                            type="number"
-                            placeholder={
-                              field.charAt(0).toUpperCase() + field.slice(1)
-                            }
+                            type="text"
+                            placeholder="Item Name"
                             className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            value={item.name}
                             onChange={(e) =>
-                              handleItemChange(index, field, e.target.value)
+                              handleItemChange(index, "name", e.target.value)
                             }
                           />
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteItem(index)}
-                          className="flex items-center justify-center p-2 text-gray-50 bg-red-400 hover:bg-red-500 rounded-md"
-                        >
-                          <BanIcon className="h-5 w-5 mr-2" /> Delete
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={handleAddItem}
-                      className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add Item
-                    </button>
-                  </div>
+                          <input
+                            type="number"
+                            placeholder="Quantity"
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleItemChange(
+                                index,
+                                "quantity",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <select
+                            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            value={item.unit}
+                            onChange={(e) =>
+                              handleItemChange(index, "unit", e.target.value)
+                            }
+                          >
+                            <option value="pcs">pcs</option>
+                            <option value="g">gms</option>
+                            <option value="ml">ml</option>
+                            <option value="cups">cups</option>
+                            <option value="tbsp">tbsp</option>
+                            <option value="tsp">tsp</option>
+                            <option value="oz">oz</option>
+                            <option value="lbs">lbs</option>
+                          </select>
+                          {["calories", "protein", "fiber", "fats"].map(
+                            (field) => (
+                              <input
+                                key={field}
+                                type="number"
+                                placeholder={
+                                  field.charAt(0).toUpperCase() + field.slice(1)
+                                }
+                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onChange={(e) =>
+                                  handleItemChange(index, field, e.target.value)
+                                }
+                              />
+                            )
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteItem(index)}
+                            className="flex items-center justify-center p-2 text-gray-50 bg-red-400 hover:bg-red-500 rounded-md"
+                          >
+                            <BanIcon className="h-5 w-5 mr-2" /> Delete
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={handleAddItem}
+                        className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add Item
+                      </button>
+                    </div>
 
-                  <div className="flex justify-end gap-4">
-                    <button
-                      type="button"
-                      onClick={() => setShowMealForm(false)}
-                      className="px-4 py-2 text-gray-600 hover:text-gray-700 font-medium"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      Save Meal
-                    </button>
-                  </div>
-                </form>
-              </section>
-            )}
+                    <div className="flex justify-end gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setShowMealForm(false)}
+                        className="px-4 py-2 text-gray-600 hover:text-gray-700 font-medium"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        onClick={handleMealChanges}
+                      >
+                        Save Meal
+                      </button>
+                    </div>
+                  </form>
+                </section>
+              )}
+              {/* Update Diet plan Status buttons */}
+              <div className="flex justify-start gap-4">
+                {selectedSubscription.status === "pending" && (
+                  <button
+                    onClick={handleSubscriptionUpdateStatus()}
+                    className={`px-4 py-2 ${
+                      selectedSubscription.status === "pending"
+                        ? "bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        : "bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 transition-colors"
+                    }`}
+                    value="inprogress"
+                  >
+                    Activate
+                  </button>
+                )}
+                {selectedSubscription.status === "inprogress" && (
+                  <button
+                    // onClick={handleSubscriptionUpdateStatus("completed")}
+                    className={`px-4 py-2 ${
+                      selectedSubscription.dietPlan.status === "active"
+                        ? "bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                        : "bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 transition-colors hover:cursor-not-allowed"
+                    }`}
+                    disabled={
+                      selectedSubscription.subscriptionEndDate < Date.now()
+                    }
+                    value="completed"
+                  >
+                    End Subscription
+                  </button>
+                )}
+              </div>
+            </section>
           </div>
         </div>
       </main>
