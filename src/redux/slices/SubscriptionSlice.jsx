@@ -3,6 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   users: [],
   selectedSubscription: null,
+  userSubscriptionDetails: {
+    dietitian: {
+      name: "",
+      title: "",
+      rating: 0,
+    },
+    plan: {
+      name: "",
+      price: 0,
+      duration: 0,
+    },
+  },
   infoMessage: "",
   loading: false,
   error: null,
@@ -92,6 +104,15 @@ const SubscriptionSlice = createSlice({
       state.infoMessage =
         "Some error occurred while updating subscription status. Please try again later.";
     },
+    getUserSubscriptionDetailsSuccess: (state, action) => {
+      state.loading = false;
+      state.userSubscriptionDetails = action.payload;
+    },
+    getUserSubscriptionDetailsFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.userSubscriptionDetails = null;
+    },
   },
 });
 
@@ -109,6 +130,8 @@ export const {
   updateMealsFailure,
   updateSubscriptionStatusSuccess,
   updateSubscriptionStatusFailure,
+  getUserSubscriptionDetailsSuccess,
+  getUserSubscriptionDetailsFailure,
 } = SubscriptionSlice.actions;
 
 export default SubscriptionSlice.reducer;

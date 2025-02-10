@@ -6,6 +6,8 @@ import {
   getSubscriptionsFailure,
   getSubscriptionsSuccess,
   getSubscriptionSuccess,
+  getUserSubscriptionDetailsFailure,
+  getUserSubscriptionDetailsSuccess,
   subscriptionLoadingStart,
   updateMealsFailure,
   updateMealsSuccess,
@@ -135,3 +137,21 @@ export const updateSubscriptionStatus =
       );
     }
   };
+
+//User facing subscription API methods
+export const getUserSubscriptionDetails = () => async (dispatch) => {
+  dispatch(subscriptionLoadingStart());
+  try {
+    const response = await axios.get(`${SUBSCRIPTION_API_URL}/user`, {
+      withCredentials: true,
+    });
+    dispatch(getUserSubscriptionDetailsSuccess(response.data));
+  } catch (err) {
+    dispatch(
+      getUserSubscriptionDetailsFailure({
+        statusCode: err.code,
+        message: err.message,
+      })
+    );
+  }
+};
