@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   dietitians: [],
   selectedDietitian: null,
+  plans: [],
   sortBy: "rating",
   searchQuery: "",
   loading: false,
@@ -29,6 +30,16 @@ const DietitianSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    setDietitianPlans: (state, action) => {
+      state.plans = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    updateDietitianPlans: (state, action) => {
+      state.plans = [...state.plans, ...action.payload];
+      state.loading = false;
+      state.error = null;
+    },
     setLoading: (state, action) => {
       state.loading = true;
     },
@@ -47,6 +58,8 @@ export const {
   setSearchQuery,
   setDietitians,
   setSelectedDietitian,
+  setDietitianPlans,
+  updateDietitianPlans,
   setLoading,
   setError,
   clearError,

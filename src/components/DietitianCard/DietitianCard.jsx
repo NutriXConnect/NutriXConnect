@@ -7,7 +7,7 @@ const DietitianCard = ({ dietitian, inListing = true }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/home/dietitian-profile/${_id}`);
+    navigate(`/home/dietitian-profile/${dietitian._id}`);
   };
 
   return (

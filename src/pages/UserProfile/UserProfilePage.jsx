@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { User, Target, Package, ChevronDown } from "lucide-react";
+import { User, Target, Package, ChevronDown, User2 } from "lucide-react";
 import HeaderComponent from "../../components/Common/Header/HeaderComponent";
 import { useSelector } from "react-redux";
 import GoalsTab from "../../components/ProfileComponents/Goals/GoalsTab";
 import OrdersTab from "../../components/ProfileComponents/Orders";
 import InformationTab from "../../components/ProfileComponents/Information/InformationTab";
 import FloatingBar from "../../components/Common/FloatingInfoBar/FloatingBar";
+import DietitianProfile from "../../components/ProfileComponents/DietianProfile/DietitianProfile";
+import DietitianPlans from "../../components/ProfileComponents/DietitianPlans";
 
 // Main Profile Page
 const UserProfilePage = () => {
@@ -13,6 +15,7 @@ const UserProfilePage = () => {
   const { error } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("information");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const isDietitian = user.role.includes("dietitian");
 
   const tabs = [
     {
@@ -21,16 +24,26 @@ const UserProfilePage = () => {
       icon: <User className="w-5 h-5" />,
     },
     {
-      name: "goals",
-      label: "Goals",
-      icon: <Target className="w-5 h-5" />,
-    },
-    {
       name: "orders",
       label: "Orders",
       icon: <Package className="w-5 h-5" />,
     },
   ];
+
+  const dietitianTabs = [
+    {
+      name: "profile",
+      label: "Profile",
+      icon: <User2 className="w-5 h-5" />,
+    },
+    {
+      name: "plans",
+      label: "Plans",
+      icon: <Target className="w-5 h-5" />,
+    },
+  ];
+
+  const combinedTabs = isDietitian ? [...tabs, ...dietitianTabs] : tabs;
 
   return (
     <>
@@ -64,7 +77,6 @@ const UserProfilePage = () => {
             </div>
           </div>
         </div>
-
         {/* Mobile Dropdown */}
         <div className="md:hidden mb-6">
           <button
@@ -72,8 +84,10 @@ const UserProfilePage = () => {
             className="w-full bg-white p-4 rounded-lg shadow-md flex items-center justify-between"
           >
             <div className="flex items-center space-x-2">
-              {tabs.find((tab) => tab.name === activeTab)?.icon}
-              <span>{tabs.find((tab) => tab.name === activeTab)?.label}</span>
+              {combinedTabs.find((tab) => tab.name === activeTab)?.icon}
+              <span>
+                {combinedTabs.find((tab) => tab.name === activeTab)?.label}
+              </span>
             </div>
             <ChevronDown
               className={`w-5 h-5 transform transition-transform ${
@@ -84,7 +98,7 @@ const UserProfilePage = () => {
 
           {isDropdownOpen && (
             <div className="absolute z-10 w-[calc(100%-3rem)] bg-white rounded-lg shadow-lg mt-2">
-              {tabs.map((tab) => (
+              {combinedTabs.map((tab) => (
                 <button
                   key={tab.name}
                   onClick={() => {
@@ -102,10 +116,9 @@ const UserProfilePage = () => {
             </div>
           )}
         </div>
-
         {/* Desktop Tabs */}
         <div className="hidden md:flex mb-6 bg-white rounded-lg shadow-md">
-          {tabs.map((tab) => (
+          {combinedTabs.map((tab) => (
             <button
               key={tab.name}
               onClick={() => setActiveTab(tab.name)}
@@ -120,11 +133,13 @@ const UserProfilePage = () => {
             </button>
           ))}
         </div>
-
         {/* Tab Content */}
         {activeTab === "information" && <InformationTab />}
-        {activeTab === "goals" && <GoalsTab />}
+        {/* {activeTab === "goals" && <GoalsTab />} */}
         {activeTab === "orders" && <OrdersTab />}
+        {activeTab === "profile" && isDietitian && <DietitianProfile />}
+        {activeTab === "plans" && isDietitian && <DietitianPlans />}
+        {/* Example content for dietitian tab */}
       </div>
       {error && (
         <FloatingBar
