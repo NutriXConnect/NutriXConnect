@@ -25,10 +25,8 @@ export const getSubscriptionsList = () => async (dispatch) => {
       withCredentials: true,
     });
     dispatch(getSubscriptionsSuccess(response.data));
-  } catch (err) {
-    dispatch(
-      getSubscriptionsFailure({ statusCode: err.code, message: err.message })
-    );
+  } catch (error) {
+    AxiosErrorHandler(error, getSubscriptionsFailure, dispatch);
   }
 };
 
@@ -41,13 +39,8 @@ export const getSubscriptionPageDetails =
         withCredentials: true,
       });
       dispatch(getSubscriptionSuccess(response.data));
-    } catch (err) {
-      dispatch(
-        getSubscriptionFailure({
-          statusCsubscriptionLoadingStartode: err.code,
-          message: err.message,
-        })
-      );
+    } catch (error) {
+      AxiosErrorHandler(error, getSubscriptionFailure, dispatch);
     }
   };
 
@@ -63,13 +56,8 @@ export const updateSubscriptionDates =
         }
       );
       dispatch(updateSubscriptionSuccess(response.data));
-    } catch (err) {
-      dispatch(
-        updateSubscriptionFailure({
-          statusCode: err.code,
-          message: err.message,
-        })
-      );
+    } catch (error) {
+      AxiosErrorHandler(error, updateSubscriptionFailure, dispatch);
     }
   };
 subscriptionLoadingStart;
@@ -85,13 +73,8 @@ export const createDietPlan = (user, subscription) => async (dispatch) => {
       }
     );
     dispatch(createDietPlanSuccess(response.data));
-  } catch (err) {
-    dispatch(
-      createDietPlanFailure({
-        statusCode: err.code,
-        message: err.message,
-      })
-    );
+  } catch (error) {
+    AxiosErrorHandler(error, createDietPlanFailure, dispatch);
   }
 };
 
@@ -106,13 +89,8 @@ export const updateMeals = (meals, dietPlanId) => async (dispatch) => {
       }
     );
     dispatch(updateMealsSuccess(response.data));
-  } catch (err) {
-    dispatch(
-      updateMealsFailure({
-        statusCode: err.code,
-        message: err.message,
-      })
-    );
+  } catch (error) {
+    AxiosErrorHandler(error, updateMealsFailure, dispatch);
   }
 };
 
@@ -128,13 +106,8 @@ export const updateSubscriptionStatus =
         }
       );
       dispatch(updateSubscriptionStatusSuccess(response.data));
-    } catch (err) {
-      dispatch(
-        updateSubscriptionStatusFailure({
-          statusCode: err.code,
-          message: err.message,
-        })
-      );
+    } catch (error) {
+      AxiosErrorHandler(error, updateSubscriptionStatusFailure, dispatch);
     }
   };
 
@@ -146,12 +119,7 @@ export const getUserSubscriptionDetails = () => async (dispatch) => {
       withCredentials: true,
     });
     dispatch(getUserSubscriptionDetailsSuccess(response.data));
-  } catch (err) {
-    dispatch(
-      getUserSubscriptionDetailsFailure({
-        statusCode: err.code,
-        message: err.message,
-      })
-    );
+  } catch (error) {
+    AxiosErrorHandler(error, getUserSubscriptionDetailsFailure, dispatch);
   }
 };

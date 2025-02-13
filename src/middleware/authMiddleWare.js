@@ -16,6 +16,7 @@ import {
   resetPasswordFailure,
   setError,
 } from "../redux/slices/AuthSlice";
+import { AxiosErrorHandler } from "./errorMiddleware";
 
 const AUTH_API = `${import.meta.env.VITE_API_URL}/api`;
 
@@ -33,7 +34,7 @@ export const login = (email, password) => async (dispatch) => {
 
     dispatch(loginSuccess(userDetails));
   } catch (error) {
-    dispatch(loginFailure("Login failed. Please try again."));
+    AxiosErrorHandler(error, loginFailure, dispatch);
   }
 };
 
@@ -44,7 +45,8 @@ export const signup = (request) => async (dispatch) => {
     const user = response.data;
     dispatch(signupSuccess(user));
   } catch (error) {
-    dispatch(signupFailure(error));
+    console.log(error);
+    AxiosErrorHandler(error, signupFailure, dispatch);
   }
 };
 
@@ -54,7 +56,8 @@ export const signout = () => async (dispatch) => {
     localStorage.removeItem("user");
     dispatch(logout());
   } catch (error) {
-    dispatch(setError(error));
+    console.log(error);
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };
 
@@ -69,15 +72,7 @@ export const forgotPassword = (email) => async (dispatch) => {
       dispatch(forgotPasswordSuccess(data.userId));
     }
   } catch (error) {
-    if (error.status == 404) {
-      dispatch(
-        forgotPasswordFailure("Email address not found. Please Signup.")
-      );
-    } else {
-      dispatch(
-        forgotPasswordFailure("Failed to validate Email address. Try again.")
-      );
-    }
+    AxiosErrorHandler(error, forgotPasswordFailure, dispatch);
   }
 };
 
@@ -93,10 +88,6 @@ export const resetPassword = (otp, userId, newPassword) => async (dispatch) => {
     );
     dispatch(resetPasswordSuccess("Password reset successful."));
   } catch (error) {
-    if (error.status == 404) {
-      dispatch(resetPasswordFailure("User not found."));
-    } else {
-      dispatch(resetPasswordFailure("Failed to reset password. Try again."));
-    }
+    AxiosErrorHandler(error, resetPasswordFailure, dispatch);
   }
 };

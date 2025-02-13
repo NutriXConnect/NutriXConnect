@@ -25,14 +25,8 @@ export const getMealTrackingDetails =
         withCredentials: true,
       });
       dispatch(getMealTrackerDataSuccess(response.data));
-    } catch (e) {
-      if (e.response) {
-        dispatch(getMealTrackerDataFailure(e.response.data));
-      } else {
-        dispatch(
-          getMealTrackerDataFailure({ statusCode: e.code, message: e.message })
-        );
-      }
+    } catch (error) {
+      AxiosErrorHandler(error, getMealTrackerDataFailure, dispatch);
     }
   };
 
@@ -43,14 +37,8 @@ export const getWeeklyProgress = () => async (dispatch) => {
       withCredentials: true,
     });
     dispatch(getWeeklyProgressDataSuccess(response.data));
-  } catch (e) {
-    if (e.response) {
-      dispatch(getWeeklyProgressDataFailure(e.response.data));
-    } else {
-      dispatch(
-        getWeeklyProgressDataFailure({ statusCode: e.code, message: e.message })
-      );
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, getWeeklyProgressDataFailure, dispatch);
   }
 };
 
@@ -66,13 +54,7 @@ export const trackMealProgress =
         { withCredentials: true }
       );
       dispatch(mealTrackerSuccess(response.data));
-    } catch (e) {
-      if (e.response) {
-        dispatch(mealTrackerFailure(e.response.data));
-      } else {
-        dispatch(
-          mealTrackerFailure({ statusCode: e.code, message: e.message })
-        );
-      }
+    } catch (error) {
+      AxiosErrorHandler(error, mealTrackerFailure, dispatch);
     }
   };

@@ -20,7 +20,7 @@ export const createOrder =
 
       dispatch(razorpayCheckout(response.data), user);
     } catch (error) {
-      dispatch(paymentProcessFailure(error.message));
+      AxiosErrorHandler(error, paymentProcessFailure, dispatch);
       return;
     }
   };
