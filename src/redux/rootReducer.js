@@ -5,6 +5,7 @@ import PaginationReducer from "./slices/PaginationSlice";
 import UserReducer from "./slices/UserSlice";
 import PaymentReducer from "./slices/PaymentSlice";
 import SubscriptionReducer from "./slices/SubscriptionSlice";
+import TrackingReducer from "./slices/TrackingSlice";
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   user: UserReducer,
   payment: PaymentReducer,
   subscription: SubscriptionReducer,
+  tracker: TrackingReducer,
 });
 
 export default rootReducer;
