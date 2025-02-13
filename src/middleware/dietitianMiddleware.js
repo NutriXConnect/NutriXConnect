@@ -7,6 +7,7 @@ import {
   setDietitianPlans,
 } from "../redux/slices/DietitainSlice";
 import { setPagination } from "../redux/slices/PaginationSlice";
+import { AxiosErrorHandler } from "./errorMiddleware";
 
 const DIETITIAN_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/dietitian`;
 
@@ -25,12 +26,8 @@ export const getListings = (page, limit, sortBy) => async (dispatch) => {
 
     dispatch(setDietitians(data.data));
     dispatch(setPagination(data.pagination));
-  } catch (e) {
-    if (e.response) {
-      dispatch(setError(e.response.data));
-    } else {
-      dispatch(setError({ message: e.message, statusCode: e.code }));
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };
 
@@ -49,12 +46,8 @@ export const getDietitianProfile =
       const data = response.data;
 
       dispatch(setSelectedDietitian(data));
-    } catch (e) {
-      if (e.response) {
-        dispatch(setError(e.response.data));
-      } else {
-        dispatch(setError({ message: e.message, statusCode: e.code }));
-      }
+    } catch (error) {
+      AxiosErrorHandler(error, setError, dispatch);
     }
   };
 
@@ -70,12 +63,8 @@ export const updateDietitianProfile = (body) => async (dispatch) => {
     const data = response.data;
 
     dispatch(setSelectedDietitian(data));
-  } catch (e) {
-    if (e.response) {
-      dispatch(setError(e.response.data));
-    } else {
-      dispatch(setError({ message: e.message, statusCode: e.code }));
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };
 
@@ -88,12 +77,8 @@ export const getDietitianProfilePlans = () => async (dispatch) => {
     const data = response.data;
 
     dispatch(setDietitianPlans(data));
-  } catch (e) {
-    if (e.response) {
-      dispatch(setError(e.response.data));
-    } else {
-      dispatch(setError({ message: e.message, statusCode: e.code }));
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };
 
@@ -108,12 +93,8 @@ export const updateDietitianPlan = (plan) => async (dispatch) => {
       { withCredentials: true }
     );
     dispatch(getDietitianProfilePlans());
-  } catch (e) {
-    if (e.response) {
-      dispatch(setError(e.response.data));
-    } else {
-      dispatch(setError({ message: e.message, statusCode: e.code }));
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };
 
@@ -128,12 +109,8 @@ export const createDietitianPlan = (plan) => async (dispatch) => {
       { withCredentials: true }
     );
     dispatch(getDietitianProfilePlans());
-  } catch (e) {
-    if (e.response) {
-      dispatch(setError(e.response.data));
-    } else {
-      dispatch(setError({ message: e.message, statusCode: e.code }));
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };
 
@@ -144,11 +121,7 @@ export const deleteDietitianPlan = (planId) => async (dispatch) => {
       withCredentials: true,
     });
     dispatch(getDietitianProfilePlans());
-  } catch (e) {
-    if (e.response) {
-      dispatch(setError(e.response.data));
-    } else {
-      dispatch(setError({ message: e.message, statusCode: e.code }));
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, setError, dispatch);
   }
 };

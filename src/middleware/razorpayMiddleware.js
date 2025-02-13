@@ -55,9 +55,6 @@ export const razorpayCheckout = (order, user) => async (dispatch) => {
     const rzp = new Razorpay(options);
     rzp.open();
   } catch (e) {
-    dispatch(
-      paymentProcessFailure("Failed to initiate Razorpay. Please try again")
-    );
-    console.error(e);
+    AxiosErrorHandler(error, paymentProcessFailure, dispatch);
   }
 };

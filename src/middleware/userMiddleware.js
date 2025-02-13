@@ -22,14 +22,8 @@ export const getUserProfileDetails = () => async (dispatch) => {
     });
 
     dispatch(getUserProfileSuccess(response.data));
-  } catch (e) {
-    if (e.response) {
-      dispatch(getUserProfileFailure(e.response.data));
-    } else {
-      dispatch(
-        getUserProfileFailure({ message: e.message, statusCode: e.code })
-      );
-    }
+  } catch (error) {
+    AxiosErrorHandler(error, getUserProfileFailure, dispatch);
   }
 };
 
@@ -54,8 +48,8 @@ export const updateUserProfileDetails = (body) => async (dispatch) => {
     });
 
     dispatch(updateUserProfileDetailsSuccess(response.data));
-  } catch (err) {
-    dispatch(updateUserProfileDetailsFailure(err.message));
+  } catch (error) {
+    AxiosErrorHandler(error, updateUserProfileDetailsFailure, dispatch);
   }
 };
 
@@ -75,13 +69,7 @@ export const getUserProfileOrders =
 
       dispatch(getUserOrdersSuccess(response.data.data));
       dispatch(setPagination(response.data.pagination));
-    } catch (e) {
-      if (e.response) {
-        dispatch(getUserOrdersFailure(e.response.data));
-      } else {
-        dispatch(
-          getUserOrdersFailure({ message: e.message, statusCode: e.code })
-        );
-      }
+    } catch (error) {
+      AxiosErrorHandler(error, getUserOrdersFailure, dispatch);
     }
   };
