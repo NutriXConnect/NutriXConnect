@@ -15,6 +15,7 @@ import {
   resetPasswordSuccess,
   resetPasswordFailure,
   setError,
+  logoutStart,
 } from "../redux/slices/AuthSlice";
 import { AxiosErrorHandler } from "./errorMiddleware";
 
@@ -51,6 +52,7 @@ export const signup = (request) => async (dispatch) => {
 };
 
 export const signout = () => async (dispatch) => {
+  dispatch(logoutStart());
   try {
     const response = await axios.get(`${AUTH_API}/auth/logout`);
     localStorage.removeItem("user");

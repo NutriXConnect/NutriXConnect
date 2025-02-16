@@ -1,9 +1,9 @@
 export const AxiosErrorHandler = (error, action, dispatch) => {
-  console.log(typeof error.response?.data);
+  console.log(error.response?.data);
 
   if (error.response) {
     let message = "";
-    let statusCode = error.response.status;
+    let statusCode = error.response.statusCode;
 
     switch (statusCode) {
       case 401:

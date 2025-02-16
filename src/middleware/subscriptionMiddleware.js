@@ -16,6 +16,7 @@ import {
   updateSubscriptionStatusSuccess,
   updateSubscriptionSuccess,
 } from "../redux/slices/SubscriptionSlice";
+import { AxiosErrorHandler } from "./errorMiddleware";
 
 const SUBSCRIPTION_API_URL = `${import.meta.env.VITE_API_URL}/api/subscription`;
 export const getSubscriptionsList = () => async (dispatch) => {

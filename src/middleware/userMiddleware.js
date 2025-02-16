@@ -10,6 +10,7 @@ import {
   getUserOrdersFailure,
 } from "../redux/slices/UserSlice";
 import { setPagination } from "../redux/slices/PaginationSlice";
+import { AxiosErrorHandler } from "./errorMiddleware";
 
 const USER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/user`;
 const ORDER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/order`;

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, signup } from "../../middleware/authMiddleWare";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSuccess } from "../../redux/slices/AuthSlice";
+import FloatingBar from "../../components/Common/FloatingInfoBar/FloatingBar";
 
 const LandingPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,6 +19,8 @@ const LandingPage = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const requestErrors = useSelector((state) => state.auth.error);
 
   useEffect(() => {
     // Check if user is logged in on initial load
@@ -333,6 +336,14 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+      {requestErrors && (
+        <FloatingBar
+          duration={0}
+          isVisible={true}
+          message={requestErrors.message}
+          type="error"
+        />
+      )}
     </div>
   );
 };

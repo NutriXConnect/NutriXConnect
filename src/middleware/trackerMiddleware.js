@@ -8,6 +8,7 @@ import {
   mealTrackerSuccess,
   trackingApiStart,
 } from "../redux/slices/TrackingSlice";
+import { AxiosErrorHandler } from "./errorMiddleware";
 
 const MEAL_TRACKING_API = `${import.meta.env.VITE_API_URL}/api/track`;
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { razorpayCheckout } from "./razorpayMiddleware";
 import { paymentProcessFailure } from "../redux/slices/PaymentSlice";
+import { AxiosErrorHandler } from "./errorMiddleware";
 
 const ORDER_DETAILS_API = `${import.meta.env.VITE_API_URL}/api/order`;
 

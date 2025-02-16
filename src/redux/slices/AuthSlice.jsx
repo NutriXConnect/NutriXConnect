@@ -40,6 +40,10 @@ const AuthSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    logoutStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
     logout: (state) => {
       state.loading = false;
       state.isAuthenticated = false;
@@ -93,6 +97,7 @@ export const {
   signupStart,
   signupSuccess,
   signupFailure,
+  logoutStart,
   logout,
   forgotPasswordStart,
   forgotPasswordSuccess,
