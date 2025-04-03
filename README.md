@@ -1,8 +1,15 @@
-# React + Vite
+# Frontend React Application for NutriXConnect with Redux & Tailwind CSS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Project Overview
+A modern React frontend application with **Redux** for state management, **Tailwind CSS** for styling, and other essential libraries for a scalable and maintainable codebase.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+- **React 18+** with functional components & hooks
+- **Redux Toolkit** for efficient state management
+- **Tailwind CSS** for utility-first styling
+- **React Router** for navigation
+- **Axios** for API requests
+- **Responsive & accessible UI**
+
