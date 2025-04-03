@@ -121,6 +121,7 @@ const SubscriptionDetailsPage = () => {
         selectedSubscription.dietPlan._id
       )
     );
+    setShowMealForm(false);
   };
 
   const handleSubscriptionUpdateStatus = (e) => {
@@ -275,7 +276,18 @@ const SubscriptionDetailsPage = () => {
                             <h4 className="font-semibold text-gray-900">
                               {meal.name}
                             </h4>
-                            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            <button
+                              onClick={() => {
+                                setMealForm({
+                                  ...mealForm,
+                                  ...meal,
+                                  ...meal.meals,
+                                  ...meal.meals.nutritionalContent,
+                                });
+                                setShowMealForm(true);
+                              }}
+                              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                            >
                               Edit
                             </button>
                           </div>
@@ -458,7 +470,7 @@ const SubscriptionDetailsPage = () => {
                 )}
                 {selectedSubscription.status === "inprogress" && (
                   <button
-                    // onClick={handleSubscriptionUpdateStatus("completed")}
+                    onClick={handleSubscriptionUpdateStatus("completed")}
                     className={`px-4 py-2 ${
                       selectedSubscription.dietPlan.status === "active"
                         ? "bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
